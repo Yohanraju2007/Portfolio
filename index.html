@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yohan Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96d;
+    --gold-dark: #8a6a20;
+    --dark: #0a0a0f;
+    --dark2: #111118;
+    --dark3: #1a1a24;
+    --dark4: #22222e;
+    --text: #e8e6e0;
+    --text-muted: #8a8890;
+    --sidebar-w: 260px;
+    --accent: #c9a84c;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor { position: fixed; width: 12px; height: 12px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: transform 0.1s; mix-blend-mode: difference; }
+  .cursor-follower { position: fixed; width: 36px; height: 36px; border: 1px solid var(--gold); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: transform 0.15s ease, width 0.2s, height 0.2s, opacity 0.2s; opacity: 0.5; }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed; left: 0; top: 0; width: var(--sidebar-w); height: 100vh;
+    background: linear-gradient(180deg, #0d0d15 0%, #111118 100%);
+    border-right: 1px solid rgba(201,168,76,0.12);
+    display: flex; flex-direction: column; padding: 40px 28px;
+    z-index: 100; overflow: hidden;
+  }
+  .sidebar::before {
+    content: ''; position: absolute; bottom: -100px; left: -60px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .sidebar-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--gold); letter-spacing: 0.04em;
+    margin-bottom: 48px; line-height: 1.3;
+  }
+  .sidebar-logo span { display: block; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--text-muted); font-weight: 400; letter-spacing: 0.2em; margin-top: 4px; }
+  .nav-links { list-style: none; flex: 1; }
+  .nav-links li { margin-bottom: 4px; }
+  .nav-links a {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border-radius: 8px;
+    color: var(--text-muted); text-decoration: none;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.06em;
+    transition: all 0.25s; position: relative; overflow: hidden;
+  }
+  .nav-links a::before {
+    content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 0;
+    background: linear-gradient(90deg, rgba(201,168,76,0.12), transparent);
+    transition: width 0.3s; border-radius: 8px;
+  }
+  .nav-links a:hover::before, .nav-links a.active::before { width: 100%; }
+  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+  .nav-links a .nav-icon { width: 16px; text-align: center; font-size: 13px; }
+
+  .sidebar-socials { display: flex; gap: 14px; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .sidebar-socials a {
+    width: 36px; height: 36px; border-radius: 8px;
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); text-decoration: none; font-size: 13px;
+    transition: all 0.25s;
+  }
+  .sidebar-socials a:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); transform: translateY(-2px); }
+
+  /* MAIN */
+  .main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 80px 80px 80px 80px; position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 70% 60% at 80% 50%, rgba(201,168,76,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0; opacity: 0.03;
+    background-image: linear-gradient(rgba(201,168,76,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,1) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; z-index: 1; display: flex; gap: 80px; align-items: center; width: 100%; }
+  .hero-text { flex: 1; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase;
+    background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2);
+    padding: 6px 14px; border-radius: 20px; margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 6vw, 82px); font-weight: 900;
+    line-height: 1.05; margin-bottom: 20px;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+  .hero-name .line2 { color: var(--gold); font-style: italic; display: block; }
+  .hero-role {
+    font-size: 16px; color: var(--text-muted); font-weight: 300;
+    letter-spacing: 0.08em; margin-bottom: 36px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+  .hero-desc {
+    font-size: 15px; color: var(--text-muted); line-height: 1.8;
+    max-width: 480px; margin-bottom: 44px;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; animation: fadeUp 0.8s ease 0.4s both; }
+  .btn-gold {
+    padding: 14px 32px; background: var(--gold);
+    color: var(--dark); font-weight: 600; font-size: 13px;
+    border: none; border-radius: 6px; cursor: none;
+    letter-spacing: 0.08em; text-decoration: none;
+    transition: all 0.25s; display: inline-block;
+    position: relative; overflow: hidden;
+  }
+  .btn-gold::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.1); opacity: 0; transition: opacity 0.2s; }
+  .btn-gold:hover::after { opacity: 1; }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(201,168,76,0.35); }
+  .btn-outline {
+    padding: 14px 32px; background: transparent;
+    color: var(--gold); font-weight: 500; font-size: 13px;
+    border: 1px solid rgba(201,168,76,0.4); border-radius: 6px; cursor: none;
+    letter-spacing: 0.08em; text-decoration: none;
+    transition: all 0.25s; display: inline-block;
+  }
+  .btn-outline:hover { background: rgba(201,168,76,0.07); border-color: var(--gold); transform: translateY(-2px); }
+
+  /* HERO PHOTO */
+  .hero-photo-wrap {
+    position: relative; flex-shrink: 0;
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+  .hero-photo-frame {
+    width: 320px; height: 400px;
+    border-radius: 20px; overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+  .hero-photo-frame img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(20%) contrast(1.05);
+    transition: filter 0.4s;
+  }
+  .hero-photo-frame:hover img { filter: grayscale(0%) contrast(1.1); }
+  .hero-photo-frame::before {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(180deg, transparent 50%, rgba(10,10,15,0.7) 100%);
+  }
+  .photo-accent {
+    position: absolute; top: -16px; right: -16px;
+    width: 80px; height: 80px; border-radius: 50%;
+    border: 2px solid var(--gold); opacity: 0.3;
+  }
+  .photo-accent2 {
+    position: absolute; bottom: -20px; left: -20px;
+    width: 100px; height: 2px; background: var(--gold); opacity: 0.4;
+  }
+  .photo-badge {
+    position: absolute; bottom: 20px; left: 20px; z-index: 2;
+    background: rgba(10,10,15,0.85); backdrop-filter: blur(10px);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 10px 16px; border-radius: 10px;
+  }
+  .photo-badge .badge-title { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; }
+  .photo-badge .badge-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  /* PLACEHOLDER PHOTO */
+  .photo-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--dark3), var(--dark4));
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; color: var(--text-muted);
+  }
+  .photo-placeholder i { font-size: 48px; color: rgba(201,168,76,0.3); }
+  .photo-placeholder p { font-size: 12px; letter-spacing: 0.1em; font-family: 'Space Mono', monospace; text-align: center; padding: 0 20px; }
+
+  /* SECTIONS */
+  section { padding: 100px 80px; }
+  .section-header { margin-bottom: 60px; }
+  .section-tag { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .section-tag::after { content: ''; flex: 0 0 40px; height: 1px; background: var(--gold); opacity: 0.4; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 4vw, 52px); font-weight: 700; line-height: 1.1; }
+  .section-title em { color: var(--gold); font-style: italic; }
+
+  /* ABOUT */
+  #about { background: var(--dark2); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .about-card {
+    background: var(--dark3); border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 16px; padding: 24px;
+    transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .about-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent); opacity: 0; transition: opacity 0.3s; }
+  .about-card:hover::before { opacity: 1; }
+  .about-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+  .card-icon { width: 44px; height: 44px; background: rgba(201,168,76,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--gold); margin-bottom: 14px; }
+  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .card-text { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .about-text p { font-size: 15px; color: var(--text-muted); line-height: 1.9; margin-bottom: 20px; }
+  .about-text .highlight { color: var(--gold); font-weight: 500; }
+  .location-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); padding: 8px 16px; border-radius: 20px; font-size: 13px; color: var(--gold); margin-top: 10px; }
+
+  /* SKILLS */
+  #skills { background: var(--dark); }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+  .skill-card {
+    background: var(--dark3); border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 16px; padding: 28px 24px;
+    transition: all 0.3s; text-align: center; position: relative; overflow: hidden;
+    transform-style: preserve-3d;
+  }
+  .skill-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0; transition: opacity 0.3s; }
+  .skill-card:hover::after { opacity: 1; }
+  .skill-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-6px) rotateX(3deg); box-shadow: 0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.1); }
+  .skill-icon { font-size: 32px; margin-bottom: 12px; }
+  .skill-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .skill-level { font-size: 11px; color: var(--gold); font-family: 'Space Mono', monospace; letter-spacing: 0.1em; }
+
+  /* PORTFOLIO */
+  #portfolio { background: var(--dark2); }
+  .portfolio-filter { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; }
+  .filter-btn {
+    padding: 8px 20px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    border: 1px solid rgba(201,168,76,0.2); background: transparent;
+    color: var(--text-muted); cursor: none; transition: all 0.25s; letter-spacing: 0.06em;
+  }
+  .filter-btn.active, .filter-btn:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+  .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .portfolio-item {
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(201,168,76,0.1);
+    position: relative; aspect-ratio: 4/3;
+    transition: all 0.35s; background: var(--dark3);
+  }
+  .portfolio-item:hover { border-color: rgba(201,168,76,0.4); transform: scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.5); z-index: 2; }
+  .portfolio-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .portfolio-item:hover img { transform: scale(1.08); }
+  .portfolio-overlay {
+    position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(10,10,15,0.92) 100%);
+    display: flex; align-items: flex-end; padding: 20px;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+  .portfolio-info .p-cat { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 6px; }
+  .portfolio-info .p-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; }
+  .port-placeholder {
+    width: 100%; height: 100%; background: var(--dark3);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  }
+  .port-placeholder i { font-size: 36px; color: rgba(201,168,76,0.25); }
+  .port-placeholder p { font-size: 11px; color: var(--text-muted); font-family: 'Space Mono', monospace; text-align: center; padding: 0 16px; }
+
+  /* PHOTOGRAPHY SECTION */
+  #photography { background: var(--dark); }
+  .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .photo-thumb {
+    border-radius: 12px; overflow: hidden; aspect-ratio: 3/4;
+    border: 1px solid rgba(201,168,76,0.1); position: relative;
+    transition: all 0.35s; background: var(--dark3);
+  }
+  .photo-thumb:first-child { grid-column: span 2; aspect-ratio: 16/9; }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .photo-thumb:hover { border-color: rgba(201,168,76,0.4); transform: scale(1.02); }
+  .photo-thumb:hover img { transform: scale(1.08); }
+  .add-photo-btn {
+    width: 100%; height: 100%; background: var(--dark3);
+    border: 2px dashed rgba(201,168,76,0.2); border-radius: 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    color: var(--text-muted); cursor: pointer; transition: all 0.25s; padding: 20px;
+    font-family: 'Space Mono', monospace; font-size: 11px; text-align: center; letter-spacing: 0.1em;
+  }
+  .add-photo-btn i { font-size: 32px; color: rgba(201,168,76,0.35); }
+  .add-photo-btn:hover { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.04); }
+
+  /* REVIEWS */
+  #reviews { background: var(--dark2); }
+  .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+  .review-card {
+    background: var(--dark3); border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 16px; padding: 28px;
+    transition: all 0.3s;
+  }
+  .review-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+  .review-stars { color: var(--gold); font-size: 13px; margin-bottom: 14px; letter-spacing: 2px; }
+  .review-text { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; font-style: italic; }
+  .review-author { display: flex; align-items: center; gap: 12px; }
+  .review-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: var(--dark); flex-shrink: 0; }
+  .review-name { font-size: 14px; font-weight: 600; }
+  .review-role { font-size: 11px; color: var(--text-muted); font-family: 'Space Mono', monospace; letter-spacing: 0.1em; }
+  .add-review-form {
+    background: var(--dark3); border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 20px; padding: 40px; max-width: 700px; margin: 0 auto;
+  }
+  .add-review-form h3 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 28px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .form-group label { font-size: 12px; color: var(--text-muted); font-family: 'Space Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; }
+  .form-group input, .form-group textarea, .form-group select {
+    background: var(--dark4); border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 10px; padding: 12px 16px; color: var(--text); font-size: 14px;
+    font-family: 'DM Sans', sans-serif; outline: none; transition: border-color 0.25s;
+    cursor: none;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color: rgba(201,168,76,0.5); box-shadow: 0 0 0 3px rgba(201,168,76,0.08); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .star-input { display: flex; gap: 6px; margin: 4px 0; }
+  .star-input label { color: rgba(201,168,76,0.3); font-size: 22px; cursor: pointer; transition: color 0.2s; }
+  .star-input input { display: none; }
+  .star-input label:hover, .star-input label:hover ~ label { color: var(--gold) !important; }
+  .star-input input:checked ~ label { color: rgba(201,168,76,0.3); }
+  .star-input input:checked + label { color: var(--gold); }
+
+  /* CONTACT */
+  #contact { background: var(--dark); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+  .contact-info { display: flex; flex-direction: column; gap: 24px; }
+  .contact-item {
+    display: flex; align-items: center; gap: 20px;
+    padding: 24px; background: var(--dark3);
+    border: 1px solid rgba(201,168,76,0.1); border-radius: 16px;
+    transition: all 0.3s;
+  }
+  .contact-item:hover { border-color: rgba(201,168,76,0.3); transform: translateX(6px); }
+  .contact-item a { color: var(--text); text-decoration: none; transition: color 0.2s; }
+  .contact-item a:hover { color: var(--gold); }
+  .contact-icon { width: 48px; height: 48px; background: rgba(201,168,76,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--gold); flex-shrink: 0; }
+  .contact-label { font-size: 11px; color: var(--text-muted); font-family: 'Space Mono', monospace; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .contact-value { font-size: 15px; font-weight: 500; }
+  .contact-form { background: var(--dark3); border: 1px solid rgba(201,168,76,0.1); border-radius: 20px; padding: 40px; }
+  .contact-form h3 { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 28px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark2); border-top: 1px solid rgba(201,168,76,0.08);
+    padding: 32px 80px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--gold); font-weight: 700; }
+  .footer-copy { font-size: 12px; color: var(--text-muted); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* 3D FLOATING ELEMENTS */
+  .float-orb {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+    animation: floatOrb linear infinite;
+    filter: blur(60px);
+  }
+  .float-orb-1 { width: 300px; height: 300px; background: rgba(201,168,76,0.04); top: 10%; right: 20%; animation-duration: 20s; }
+  .float-orb-2 { width: 200px; height: 200px; background: rgba(201,168,76,0.03); bottom: 20%; left: 30%; animation-duration: 15s; animation-direction: reverse; }
+  @keyframes floatOrb { 0%{transform:translate(0,0)} 33%{transform:translate(30px,-20px)} 66%{transform:translate(-20px,30px)} 100%{transform:translate(0,0)} }
+
+  /* SCROLL BAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark2); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 2px; }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    section { padding: 60px 24px; }
+    .hero { padding: 80px 24px; }
+    .hero-content { flex-direction: column-reverse; gap: 40px; }
+    .hero-photo-frame { width: 260px; height: 320px; }
+    .about-grid, .contact-grid, .portfolio-grid, .reviews-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- FLOATING ORBS -->
+<div class="float-orb float-orb-1"></div>
+<div class="float-orb float-orb-2"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    Yohan Portfolio
+    <span>Digital Creator</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#hero" class="active"><span class="nav-icon"><i class="fas fa-home"></i></span> Home</a></li>
+    <li><a href="#about"><span class="nav-icon"><i class="fas fa-user"></i></span> About</a></li>
+    <li><a href="#skills"><span class="nav-icon"><i class="fas fa-tools"></i></span> Skills</a></li>
+    <li><a href="#portfolio"><span class="nav-icon"><i class="fas fa-th-large"></i></span> Portfolio</a></li>
+    <li><a href="#photography"><span class="nav-icon"><i class="fas fa-camera"></i></span> Photography</a></li>
+    <li><a href="#reviews"><span class="nav-icon"><i class="fas fa-star"></i></span> Reviews</a></li>
+    <li><a href="#contact"><span class="nav-icon"><i class="fas fa-envelope"></i></span> Contact</a></li>
+  </ul>
+  <div class="sidebar-socials">
+    <a href="https://www.instagram.com/_yohanraju?igsh=N2Y5bzF1bWZsbHFh&utm_source=qr" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="mailto:yohanraju685@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+    <a href="tel:+917012345678" title="Call"><i class="fas fa-phone"></i></a>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HERO -->
+  <section id="hero" class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-tag">Available for Projects</div>
+        <h1 class="hero-name">
+          Yohan
+          <span class="line2">Raju.</span>
+        </h1>
+        <p class="hero-role">Digital Marketing · Videographer · Content Creator</p>
+        <p class="hero-desc">
+          A first-year creative from <strong style="color:var(--gold)">Kochi, Kerala</strong> — crafting premium digital experiences through design, video, and storytelling. Currently managing social media brands and growing at Kristu Jayanti University, Bangalore.
+        </p>
+        <div class="hero-btns">
+          <a href="#portfolio" class="btn-gold">View My Work</a>
+          <a href="#contact" class="btn-outline">Let's Connect</a>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <div class="hero-photo-frame" id="heroPhotoFrame">
+          <!-- REPLACE src with your photo path -->
+          <img src="IMG_1.JPG" alt="Yohan Raju" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+        <div class="photo-accent"></div>
+        <div class="photo-accent2"></div>
+        <div class="photo-badge">
+          <div class="badge-title">📍 Kochi, Kerala</div>
+          <div class="badge-sub">Kristu Jayanti University</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-header reveal">
+      <div class="section-tag">About Me</div>
+      <h2 class="section-title">Who is <em>Yohan?</em></h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          I'm <span class="highlight">Yohan Raju</span>, a passionate digital creator and marketer from <span class="highlight">Kochi, Kerala</span>. Currently pursuing my first year at <span class="highlight">Kristu Jayanti University, Bangalore</span>, I blend academic knowledge with real-world creative execution.
+        </p>
+        <p>
+          I work as a <span class="highlight">Digital Marketing Executive</span> for a café, managing social media presence, creating content, and designing eye-catching visuals that drive engagement. I also capture moments behind the lens — from portraits to professional photoshoots.
+        </p>
+        <p>
+          My toolkit spans poster design, video editing, content writing, and social media strategy — all delivered with a premium, intentional aesthetic.
+        </p>
+        <div class="location-badge"><i class="fas fa-map-marker-alt"></i> Kochi, Kerala · Now in Bangalore</div>
+      </div>
+      <div class="about-cards reveal">
+        <div class="about-card">
+          <div class="card-icon"><i class="fas fa-bullhorn"></i></div>
+          <div class="card-title">Digital Marketing</div>
+          <div class="card-text">Social media strategy, content calendars, brand building for cafés & businesses</div>
+        </div>
+        <div class="about-card">
+          <div class="card-icon"><i class="fas fa-film"></i></div>
+          <div class="card-title">Video Editing</div>
+          <div class="card-text">Reels, brand videos, cinematic cuts using CapCut & Premier Pro (beginner)</div>
+        </div>
+        <div class="about-card">
+          <div class="card-icon"><i class="fas fa-camera"></i></div>
+          <div class="card-title">Photography</div>
+          <div class="card-text">Portrait, product & event photography with creative eye for storytelling</div>
+        </div>
+        <div class="about-card">
+          <div class="card-icon"><i class="fas fa-palette"></i></div>
+          <div class="card-title">Design & Editing</div>
+          <div class="card-text">Posters, graphics, thumbnails in Canva, Photoshop & Lightroom</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-header reveal">
+      <div class="section-tag">Skills & Tools</div>
+      <h2 class="section-title">My <em>Toolkit</em></h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-icon">🎬</div>
+        <div class="skill-name">CapCut</div>
+        <div class="skill-level">Advanced</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🎞️</div>
+        <div class="skill-name">Premiere Pro</div>
+        <div class="skill-level">Beginner</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🌅</div>
+        <div class="skill-name">Lightroom</div>
+        <div class="skill-level">Intermediate</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🎨</div>
+        <div class="skill-name">Canva</div>
+        <div class="skill-level">Advanced</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🖼️</div>
+        <div class="skill-name">Photoshop</div>
+        <div class="skill-level">Intermediate</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">📸</div>
+        <div class="skill-name">Photography</div>
+        <div class="skill-level">Creative</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">✍️</div>
+        <div class="skill-name">Content Writing</div>
+        <div class="skill-level">Skilled</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">📱</div>
+        <div class="skill-name">Social Media</div>
+        <div class="skill-level">Advanced</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🎯</div>
+        <div class="skill-name">Poster Making</div>
+        <div class="skill-level">Advanced</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="section-header reveal">
+      <div class="section-tag">My Work</div>
+      <h2 class="section-title">Featured <em>Projects</em></h2>
+    </div>
+    <div class="portfolio-filter reveal">
+      <button class="filter-btn active" onclick="filterPortfolio('all', this)">All</button>
+      <button class="filter-btn" onclick="filterPortfolio('poster', this)">Posters</button>
+      <button class="filter-btn" onclick="filterPortfolio('social', this)">Social Media</button>
+      <button class="filter-btn" onclick="filterPortfolio('video', this)">Video</button>
+      <button class="filter-btn" onclick="filterPortfolio('cafe', this)">Café Work</button>
+    </div>
+    <div class="portfolio-grid" id="portfolioGrid">
+      
+      <div class="portfolio-item reveal" data-cat="poster">
+        <img src="IMG_2.jpg" onclick="openFullMedia('IMG_2.jpg', 'image')" alt="Cafe Poster" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+        <div class="portfolio-overlay">
+          <div class="portfolio-info">
+            <div class="p-cat">Poster Design</div>
+            <div class="p-title">Pistachio White Chocolate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-item reveal" data-cat="social">
+        <img src="IMG_3.jpg" onclick="openFullMedia('IMG_3.jpg', 'image')" alt="Dessert Post" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+        <div class="portfolio-overlay">
+          <div class="portfolio-info">
+            <div class="p-cat">Dessert Ingredients</div>
+            <div class="p-title">Belgium Chocolate Cake</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="portfolio-item reveal" data-cat="video">
+        <video autoplay loop muted playsinline 
+               onclick="openFullMedia('Promo.MP4.mp4', 'video')" 
+               style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+          <source src="Promo.MP4.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="portfolio-overlay">
+          <div class="portfolio-info">
+            <div class="p-cat">Video Reel</div>
+            <div class="p-title">Cinematic Brand Edit</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  <div class="portfolio-item reveal" data-cat="social">
+    <img src="IMG_3.jpg" onclick="openFullMedia('IMG_3.jpg', 'image')" alt="Dessert Post" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+    <div class="portfolio-overlay">
+      <div class="portfolio-info">
+        <div class="p-cat">Dessert Ingredients</div>
+        <div class="p-title">Belgium Chocolate Cake</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="portfolio-item reveal" data-cat="video">
+    <video autoplay loop muted playsinline 
+           onclick="openFullMedia('Promo.MP4', 'video')" 
+           style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+      <source src="Promo.MP4" type="video/mp4">
+    </video>
+    <div class="portfolio-overlay">
+      <div class="portfolio-info">
+        <div class="p-cat">Video Reel</div>
+        <div class="p-title">Cinematic Brand Edit</div>
+      </div>
+    </div>
+
+</div>
+    </div>
+  </section>
+
+  <!-- PHOTOGRAPHY -->
+  <section id="photography">
+    <div class="section-header reveal">
+      <div class="section-tag">Behind The Lens</div>
+      <h2 class="section-title">Photography <em>Shots</em></h2>
+    </div>
+    <div class="photo-grid reveal">
+      <!-- MAIN FEATURE PHOTO (span 2) -->
+      <div class="photo-thumb" style="grid-column:span 2;">
+        <div class="add-photo-btn" id="featuredPhotoBtn">
+
+          <img src="IMG_4.jpeg" onclick="openFullMedia('IMG_4.jpeg', 'image')" alt="Cafe Poster" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+        </div>
+      </div>
+      <!-- PHOTO 2 -->
+      <div class="photo-thumb">
+        <div class="add-photo-btn">
+         
+          <img src="IMG_5.jpeg" onclick="openFullMedia('IMG_5.jpeg', 'image')" alt="Cafe Poster" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+        </div>
+      </div>
+      <!-- PHOTO 3 -->
+      <div class="photo-thumb">
+        <div class="add-photo-btn">
+         
+          <img src="IMG_6.jpeg" onclick="openFullMedia('IMG_6.jpeg', 'image')" alt="Cafe Poster" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+        </div>
+      </div>
+      <!-- PHOTO 4 -->
+      <div class="photo-thumb">
+        <div class="add-photo-btn">
+          
+          <img src="IMG_7.jpeg" onclick="openFullMedia('IMG_7.jpeg', 'image')" alt="Cafe Poster" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in;">
+        </div>
+      </div>
+    </div>
+    <p style="color:var(--text-muted);font-size:13px;margin-top:24px;font-family:'Space Mono',monospace;letter-spacing:0.08em;text-align:center;">
+      
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="reviews">
+    <div class="section-header reveal">
+      <div class="section-tag">Client Reviews</div>
+      <h2 class="section-title">What People <em>Say</em></h2>
+    </div>
+    <div class="reviews-grid" id="reviewsContainer">
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Yohan transformed our café's social media presence completely. His posters and reels are absolutely stunning — our footfall has increased since he took over!"</p>
+        <div class="review-author">
+          <div class="review-avatar">A</div>
+          <div>
+            <div class="review-name">Arjun Nair</div>
+            <div class="review-role">Café Owner · Kochi</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Creative, punctual and very professional for a first-year student! His content writing and poster designs were exactly what our brand needed. Highly recommend."</p>
+        <div class="review-author">
+          <div class="review-avatar">P</div>
+          <div>
+            <div class="review-name">Priya Mathew</div>
+            <div class="review-role">Small Business Owner</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-text">"His photography eye is incredible. The photos he clicked for our event were editorial-quality. Looking forward to working with him on future projects!"</p>
+        <div class="review-author">
+          <div class="review-avatar">R</div>
+          <div>
+            <div class="review-name">Rahul Thomas</div>
+            <div class="review-role">Event Organizer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD REVIEW FORM -->
+    <div class="add-review-form reveal">
+      <h3>Leave a <em style="color:var(--gold);font-family:'Playfair Display',serif;">Review</em></h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="rName" placeholder="e.g. Anjali Sharma" />
+        </div>
+        <div class="form-group">
+          <label>Your Role / Company</label>
+          <input type="text" id="rRole" placeholder="e.g. Business Owner" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Rating</label>
+        <div class="star-input" id="starInput">
+          <input type="radio" name="star" id="s5" value="5"><label for="s5">★</label>
+          <input type="radio" name="star" id="s4" value="4"><label for="s4">★</label>
+          <input type="radio" name="star" id="s3" value="3"><label for="s3">★</label>
+          <input type="radio" name="star" id="s2" value="2"><label for="s2">★</label>
+          <input type="radio" name="star" id="s1" value="1"><label for="s1">★</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Your Review</label>
+        <textarea id="rText" placeholder="Share your experience working with Yohan..."></textarea>
+      </div>
+      <button class="btn-gold" onclick="submitReview()" style="cursor:none;">Post Review</button>
+      <div id="reviewMsg" style="margin-top:12px;font-size:13px;color:var(--gold);display:none;">✓ Thank you for your review!</div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header reveal">
+      <div class="section-tag">Get In Touch</div>
+      <h2 class="section-title">Let's <em>Work Together</em></h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fas fa-phone"></i></div>
+          <div>
+            <div class="contact-label">Phone</div>
+            <div class="contact-value"><a href="tel:+9190613 77141">+91 90613 77141</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="mailto:yohanraju685@gmail.com">yohanraju685@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+          <div>
+            <div class="contact-label">Instagram</div>
+            <div class="contact-value"><a href="https://www.instagram.com/_yohanraju?igsh=N2Y5bzF1bWZsbHFh&utm_source=qr" target="_blank">@_yohanraju</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div>
+            <div class="contact-label">Location</div>
+            <div class="contact-value">Kochi, Kerala · Now in Bangalore</div>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form reveal">
+        <h3>Send a <em style="color:var(--gold);font-family:'Playfair Display',serif;">Message</em></h3>
+        <div class="form-row" style="margin-top:20px;">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="cName" placeholder="Your Name" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="cEmail" placeholder="your@email.com" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" id="cSubject" placeholder="Project Inquiry / Collaboration..." />
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="cMsg" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button class="btn-gold" onclick="sendMessage()" style="cursor:none;">Send Message</button>
+        <div id="contactMsg" style="margin-top:12px;font-size:13px;color:var(--gold);display:none;">✓ Message sent! I'll get back to you soon.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Yohan Portfolio</div>
+    <div class="footer-copy">© 2025 Yohan Raju · Digital Marketing · Kochi, Kerala</div>
+    <div style="display:flex;gap:14px;">
+      <a href="https://www.instagram.com/_yohanraju?igsh=N2Y5bzF1bWZsbHFh&utm_source=qr" target="_blank" style="color:var(--text-muted);font-size:16px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'"><i class="fab fa-instagram"></i></a>
+      <a href="mailto:yohanraju685@gmail.com" style="color:var(--text-muted);font-size:16px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'"><i class="fas fa-envelope"></i></a>
+      <a href="tel:+917012345678" style="color:var(--text-muted);font-size:16px;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'"><i class="fas fa-phone"></i></a>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('cursorFollower');
+let mx = 0, my = 0, fx = 0, fy = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+(function loop(){ fx += (mx-fx)*0.12; fy += (my-fy)*0.12; follower.style.left = fx+'px'; follower.style.top = fy+'px'; requestAnimationFrame(loop); })();
+document.querySelectorAll('a,button,.skill-card,.portfolio-item,.review-card,.contact-item,.about-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { follower.style.width='60px'; follower.style.height='60px'; follower.style.opacity='0.8'; });
+  el.addEventListener('mouseleave', () => { follower.style.width='36px'; follower.style.height='36px'; follower.style.opacity='0.5'; });
+});
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => { if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'), i*80); } });
+}, { threshold: 0.1 });
+reveals.forEach(el => revealObs.observe(el));
+
+// ACTIVE NAV
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 200) current = s.id; });
+  navLinks.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#'+current); });
+});
+
+// 3D TILT on skill cards
+document.querySelectorAll('.skill-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `translateY(-6px) rotateX(${-y*14}deg) rotateY(${x*14}deg)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+// PORTFOLIO FILTER
+function filterPortfolio(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.portfolio-item').forEach(item => {
+    const show = cat === 'all' || item.dataset.cat === cat;
+    item.style.opacity = show ? '1' : '0.2';
+    item.style.pointerEvents = show ? 'auto' : 'none';
+    item.style.transform = show ? '' : 'scale(0.95)';
+  });
+}
+
+// STAR RATING VISUAL
+document.querySelectorAll('.star-input label').forEach((label, idx, all) => {
+  label.addEventListener('mouseenter', () => { all.forEach((l, i) => { l.style.color = i <= idx ? 'var(--gold)' : 'rgba(201,168,76,0.3)'; }); });
+  label.addEventListener('mouseleave', () => { updateStarDisplay(); });
+  label.addEventListener('click', updateStarDisplay);
+});
+function updateStarDisplay() {
+  const checked = document.querySelector('.star-input input:checked');
+  const val = checked ? parseInt(checked.value) : 0;
+  document.querySelectorAll('.star-input label').forEach((l, i) => {
+    l.style.color = (5 - i) <= val ? 'var(--gold)' : 'rgba(201,168,76,0.3)';
+  });
+}
+
+// SUBMIT REVIEW
+function submitReview() {
+  const name = document.getElementById('rName').value.trim();
+  const role = document.getElementById('rRole').value.trim();
+  const text = document.getElementById('rText').value.trim();
+  const starEl = document.querySelector('.star-input input:checked');
+  if(!name || !text) { alert('Please fill in your name and review.'); return; }
+  const stars = starEl ? parseInt(starEl.value) : 5;
+  const starsStr = '★'.repeat(stars) + '☆'.repeat(5-stars);
+  const initial = name.charAt(0).toUpperCase();
+  const card = document.createElement('div');
+  card.className = 'review-card reveal visible';
+  card.innerHTML = `<div class="review-stars">${starsStr}</div><p class="review-text">"${text}"</p><div class="review-author"><div class="review-avatar">${initial}</div><div><div class="review-name">${name}</div><div class="review-role">${role || 'Client'}</div></div></div>`;
+  document.getElementById('reviewsContainer').appendChild(card);
+  document.getElementById('rName').value = '';
+  document.getElementById('rRole').value = '';
+  document.getElementById('rText').value = '';
+  if(starEl) starEl.checked = false;
+  updateStarDisplay();
+  document.getElementById('reviewMsg').style.display = 'block';
+  setTimeout(() => document.getElementById('reviewMsg').style.display = 'none', 3000);
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// SEND MESSAGE
+function sendMessage() {
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const msg = document.getElementById('cMsg').value.trim();
+  if(!name || !email || !msg) { alert('Please fill in all required fields.'); return; }
+  document.getElementById('contactMsg').style.display = 'block';
+  setTimeout(() => document.getElementById('contactMsg').style.display = 'none', 4000);
+  document.getElementById('cName').value = '';
+  document.getElementById('cEmail').value = '';
+  document.getElementById('cSubject').value = '';
+  document.getElementById('cMsg').value = '';
+}
+
+// SMOOTH PARALLAX on hero
+window.addEventListener('scroll', () => {
+  const s = window.scrollY;
+  const heroText = document.querySelector('.hero-text');
+  if(heroText && s < window.innerHeight) { heroText.style.transform = `translateY(${s*0.15}px)`; heroText.style.opacity = 1 - s/600; }
+});
+
+// PHOTO UPLOAD FUNCTIONALITY
+document.querySelectorAll('.add-photo-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*';
+    input.onchange = e => {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = document.createElement('img');
+        img.src = ev.target.result;
+        btn.parentElement.innerHTML = '';
+        btn.parentElement.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  });
+});
+
+// HERO PHOTO UPLOAD
+document.getElementById('heroPlaceholder').addEventListener('click', () => {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const frame = document.getElementById('heroPhotoFrame');
+      frame.innerHTML = `<img src="IMG_1">src="${ev.target.result}" alt="Yohan Raju" /><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(10,10,15,0.7) 100%);"></div>`;
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+});
+</script>
+<div id="imageLightbox" onclick="this.style.display='none'" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10000; cursor:zoom-out; align-items:center; justify-content:center;">
+  <img id="lightboxImg" src="" style="max-width:90%; max-height:90%; border:2px solid var(--gold); border-radius:10px;">
+</div>
+</body>
+</html>
